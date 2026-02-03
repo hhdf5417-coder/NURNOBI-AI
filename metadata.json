@@ -1,0 +1,8 @@
+
+{
+  "name": "NURNOBI AI Chat",
+  "description": "A fully functional, single-file HTML AI chat application with features like model switching, chat history, voice input, and markdown rendering. It is designed to be a complete and interactive chat experience.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
