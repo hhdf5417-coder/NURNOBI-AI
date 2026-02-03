@@ -2985,5 +2985,91 @@ if(mic){
 console.log("UPLOAD + VOICE ACTIVATED");
 </script>
 
+
+<script>
+// ===== SMART VOICE SEND FIX =====
+const micBtn2 = document.getElementById('white-voice-button');
+if(micBtn2){
+ micBtn2.onclick = function(){
+   const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+   if(!Speech){
+     alert("Chrome ব্যবহার করুন");
+     return;
+   }
+   const rec = new Speech();
+   rec.lang = "bn-BD";
+
+   rec.onresult = function(e){
+     const txt = e.results[0][0].transcript;
+     const inp = document.getElementById('chat-input');
+     inp.value = txt;
+
+     // universal send
+     setTimeout(()=>{
+       if(typeof sendMessage==='function') sendMessage(txt);
+       else if(typeof sendButton!=='undefined') sendButton.click();
+       else document.querySelector('button[type=submit]')?.click();
+     }, 300);
+   };
+
+   rec.start();
+ };
+}
+
+// ===== FILE PANEL AUTO CLOSE FIX =====
+const fileBtn = document.getElementById('file-upload-button');
+if(fileBtn){
+ fileBtn.onclick = function(){
+   const input = document.getElementById('file-upload');
+   input.click();
+
+   // when back pressed close panel
+   input.onblur = ()=>{
+     document.body.click();
+   };
+ };
+}
+</script>
+
+
+<script>
+// ===== DOUBLE PICKER FIX BY SUDIR VAI =====
+(function(){
+  const btn = document.getElementById('file-upload-button');
+  const input = document.getElementById('file-upload');
+
+  if(!btn || !input) return;
+
+  // Kill all previous listeners by cloning
+  const cleanBtn = btn.cloneNode(true);
+  btn.parentNode.replaceChild(cleanBtn, btn);
+
+  // Single safe trigger
+  cleanBtn.onclick = function(e){
+    e.stopPropagation();
+    e.preventDefault();
+
+    if(window.__fileLock) return;
+    window.__fileLock = true;
+
+    input.click();
+
+    // release lock
+    setTimeout(()=>{ window.__fileLock = false; }, 900);
+  };
+
+  // Cancel / back fix
+  input.onblur = function(){
+    setTimeout(()=>{
+      document.body.click();
+      document.body.style.overflow='auto';
+      window.__fileLock = false;
+    },200);
+  };
+
+  console.log("DOUBLE PICKER FIX ACTIVE");
+})();
+</script>
+
 </body>
 </html>
